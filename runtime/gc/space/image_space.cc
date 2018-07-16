@@ -1945,7 +1945,8 @@ static bool CheckSpace(const std::string& cache_filename, std::string* error_msg
 
   uint64_t fs_overall_size = buf.f_bsize * static_cast<uint64_t>(buf.f_blocks);
   // Zygote is privileged, but other things are not. Use bavail.
-  uint64_t fs_free_size = buf.f_bsize * static_cast<uint64_t>(buf.f_bavail);
+  // Use bfree for booting Android when fs bavail is too small.
+  uint64_t fs_free_size = buf.f_bsize * static_cast<uint64_t>(buf.f_bfree);
 
   // Take the overall size as an indicator for a tmpfs, which is being used for the decryption
   // environment. We do not want to fail quickening the boot image there, as it is beneficial
